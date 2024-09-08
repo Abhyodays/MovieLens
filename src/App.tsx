@@ -1,8 +1,12 @@
+
+import { ThemeProvider } from "./contexts/ThemeContext";
 import ApplicationNavigator from "./navigators/ApplicationNaivgator";
 
 const App = () => {
   return (
-    <ApplicationNavigator />
+    <ThemeProvider>
+      <ApplicationNavigator />
+    </ThemeProvider>
   )
 }
 
