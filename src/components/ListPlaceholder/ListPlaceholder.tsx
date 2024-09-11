@@ -2,9 +2,7 @@ import { StyleSheet, View } from "react-native"
 
 const ListPlaceholder = () => {
     return (
-        <View style={styles.container}>
-
-        </View>
+        <View style={styles.container}></View>
     )
 }
 

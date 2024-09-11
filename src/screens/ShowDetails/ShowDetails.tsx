@@ -1,9 +1,16 @@
-import { Text, View } from "react-native"
+import { Dimensions, Image, ImageBackground, StatusBar, Text, View } from "react-native"
 
-const ShowDetails = () => {
+type ShowDetailsPropType = {
+    route: {
+        params: {
+            id: number
+        }
+    }
+}
+const ShowDetails = ({ route }: ShowDetailsPropType) => {
     return (
-        <View>
-            <Text>ShowDetails</Text>
+        <View style={{ flex: 1 }}>
+            <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
         </View>
     )
 }

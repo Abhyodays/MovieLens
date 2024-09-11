@@ -1,28 +1,38 @@
-import { Image, Text, View } from "react-native"
+import { Image, StyleProp, Text, View, ViewStyle } from "react-native"
 import { Show } from "../../types/Show"
 import { StyleSheet } from "react-native"
 import Colors from "../../constants/Colors"
 import { Dimensions } from "react-native"
+import { useTheme } from "../../contexts/ThemeContext"
 
 type ShowCardPropType = {
-    data: Show
+    data: Show,
+    customStyles?: StyleProp<ViewStyle>
 }
-const ShowCard = ({ data }: ShowCardPropType) => {
+const ShowCard = ({ data, customStyles }: ShowCardPropType) => {
+    const theme = useTheme();
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, customStyles]}>
             <Image source={{ uri: `${process.env.IMAGE_URI}${data.poster_path}` }} style={styles.card_image} resizeMode="cover" />
-            <Text>{data.original_name || data.original_title}</Text>
+            <Text numberOfLines={2} style={[styles.card_title, theme.colors]}>{data.original_name || data.original_title}</Text>
         </View>
     )
 }
 const styles = StyleSheet.create({
     card_image: {
         borderRadius: 10,
+        width: '100%',
         aspectRatio: 3 / 4,
-        width: '100%'
+        marginBottom: 5,
     },
     container: {
-        width: 165
+        width: 200,
+    },
+    card_title: {
+        paddingHorizontal: 10,
+        fontSize: 16,
+        fontWeight: '500',
+        marginTop: 10
     }
 })
 

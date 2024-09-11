@@ -4,10 +4,11 @@ import Profile from "../screens/Profile/Profile";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
 import Icon from 'react-native-vector-icons/Ionicons'
 import Colors from "../constants/Colors";
+import ShowGrid from "../screens/ShowGrid/ShowGrid";
 export type HomeTabsParamList = {
     Home: undefined,
     Discover: undefined,
-    Profile: undefined
+    Profile: undefined,
 }
 const HomeTabs = () => {
     const Tabs = createMaterialBottomTabNavigator<HomeTabsParamList>();
