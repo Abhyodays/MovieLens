@@ -1,9 +1,10 @@
 export type Show = {
     id:number,
-    original_title?:string,
-    original_name?:string,
+    title?:string,
+    name?:string,
     poster_path:string,
     overview:string,
     genre_ids:number[],
-    adult:boolean
+    adult:boolean,
+
 }

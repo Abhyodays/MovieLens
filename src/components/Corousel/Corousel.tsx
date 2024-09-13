@@ -2,12 +2,16 @@ import { View } from "react-native"
 import { FlatList } from "react-native-gesture-handler"
 import { Data } from "../../constants/Data"
 import Slide from "../Slide/Slide"
+import { Show } from "../../types/Show"
 
-const Corousel = () => {
+type CorouselPropType = {
+    data: Show[]
+}
+const Corousel = ({ data }: CorouselPropType) => {
     return (
         <View>
             <FlatList
-                data={Data.results}
+                data={data}
                 renderItem={({ item }) => <Slide data={item} />}
                 keyExtractor={(item) => item.id.toString()}
                 horizontal

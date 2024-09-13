@@ -18,7 +18,7 @@ const Slide = ({ data }: SlidePropType) => {
         <View style={{ height: 400, width: Dimensions.get("screen").width }}>
             <ImageBackground source={{ uri: `${process.env.IMAGE_POSTER_URI}${data.poster_path}` }} style={{ flex: 1, width: '100%', justifyContent: 'flex-end' }}>
                 <View style={styles.poster_details}>
-                    <Text style={styles.poster_title}>{data.original_name || data.original_title}</Text>
+                    <Text style={styles.poster_title}>{data.name || data.title}</Text>
                     <Text numberOfLines={3} style={styles.poster_text}>{data.overview}</Text>
                     <TouchableOpacity style={styles.poster_button} activeOpacity={0.6} onPress={gotoDetails}>
                         <Text style={styles.poster_button_text}>See More</Text>

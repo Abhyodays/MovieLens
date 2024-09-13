@@ -14,7 +14,7 @@ const ShowCard = ({ data, customStyles }: ShowCardPropType) => {
     return (
         <View style={[styles.container, customStyles]}>
             <Image source={{ uri: `${process.env.IMAGE_URI}${data.poster_path}` }} style={styles.card_image} resizeMode="cover" />
-            <Text numberOfLines={2} style={[styles.card_title, theme.colors]}>{data.original_name || data.original_title}</Text>
+            <Text numberOfLines={2} style={[styles.card_title, theme.colors]}>{data.name || data.title}</Text>
         </View>
     )
 }

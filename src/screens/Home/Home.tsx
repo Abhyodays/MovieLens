@@ -10,9 +10,14 @@ import { Data } from "../../constants/Data";
 import ListPlaceholder from "../../components/ListPlaceholder/ListPlaceholder";
 import HorizontalList from "../../components/HorizontalList/HorizontailList";
 import Corousel from "../../components/Corousel/Corousel";
+import { useEffect, useState } from "react";
+import { Show } from "../../types/Show";
+import { movieService } from "../../services/movieService";
+import { useTrendingShows } from "../../hooks/useMovieQueries";
 const Home = () => {
+
+    const [posterData, setPosterData] = useState<Show[]>([])
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
-    const theme = useTheme();
     const gotoTrendingMovies = () => {
         navigation.navigate("ShowGrid", { title: "Trending Movies", query: "/trending" })
     }
@@ -22,12 +27,17 @@ const Home = () => {
     const gotoTopRatedMovies = () => {
         navigation.navigate("ShowGrid", { title: "Top Rated Movies", query: "/top-rated" })
     }
+
+    const {
+        data,
+        error,
+        isLoading
+    } = useTrendingShows();
+
     return (
         <ScrollView style={styles.home_container}>
-            {/* <View style={[Styles.container, styles.header, { backgroundColor: theme.colors.backgroundColor }]}>
-                <Text style={[styles.brand, Styles.fontOswaldBold]}>MovieLens</Text>
-            </View> */}
-            <Corousel />
+
+            <Corousel data={data ? data.results : []} />
             <ListHeader title="Trending Movies" onSeeMore={gotoTrendingMovies} />
             {Data ? <HorizontalList data={Data.results} /> : <ListPlaceholder />}
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
