@@ -9,9 +9,8 @@ type HorizontalListPropType = {
 
 }
 const HorizontalList = ({ data, onEnd }: HorizontalListPropType) => {
-    const theme = useTheme();
     return (
-        <View style={theme.colors}>
+        <View >
             <FlatList
                 data={data}
                 renderItem={({ item }) => <ShowCard data={item} customStyles={{ width: Dimensions.get('screen').width / 2.5 }} />}

@@ -19,14 +19,10 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const theme = useTheme()
 
-    const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useMovies(route.params.query || "");
+    const { data, loadMore } = useMovies(route.params.query || "");
 
     const results = data?.pages.flatMap(page => page.results) || [];
-    const loadMore = () => {
-        if (hasNextPage && !isFetchingNextPage) {
-            fetchNextPage();
-        }
-    };
+
     useEffect(() => {
         navigation.setOptions({ title: route.params.title })
     }, [])

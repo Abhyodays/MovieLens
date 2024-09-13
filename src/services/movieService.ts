@@ -25,9 +25,9 @@ export const movieService = {
             throw err;
         }
     },
-    getTopRatedMovies:async():Promise<ApiResponse>=>{
+    getTopRatedMovies:async(page:number):Promise<ApiResponse>=>{
         try{
-            const response = await client.get("/trending/all/day?language=en-US")
+            const response = await client.get(`/movie/top_rated?language=en-US&page=${page}`)
             return response.data;
         }catch(err){
             console.log(err);

@@ -29,32 +29,25 @@ const Home = () => {
     } = useTrendingShows();
 
     const { data: popularMoviesData,
-        hasNextPage: hasNextPagePopularMovies,
-        fetchNextPage: fetchNextPagePopularMovies,
-        isFetchingNextPage: isFetchingNextPagePopularMovies } =
-        useMovies(POPULAR_MOVIES)
+        loadMore: loadMorePopularMovies
+    } = useMovies(POPULAR_MOVIES)
     const popularMovies = popularMoviesData?.pages.flatMap(page => page.results) || [];
-    const loadMorePopularMovies = () => {
-        if (hasNextPagePopularMovies && !isFetchingNextPagePopularMovies) {
-            fetchNextPagePopularMovies();
-        }
-    };
-    const { data: upcomingMoviesData,
-        hasNextPage: hasNextPageUpcomingMovies,
-        fetchNextPage: fetchNextPageUpcomingMovies,
-        isFetchingNextPage: isFetchingNextPageUpcomingMovies } =
-        useMovies(UPCOMING_MOVIES);
+    const {
+        data: upcomingMoviesData,
+        loadMore: loadMoreUpcomingMovies
+    } = useMovies(UPCOMING_MOVIES);
 
     const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results) || [];
-    const loadMoreUpcomingMovies = () => {
-        if (hasNextPageUpcomingMovies && !isFetchingNextPageUpcomingMovies) {
-            fetchNextPageUpcomingMovies();
-        }
-    };
+    const theme = useTheme();
 
+    const {
+        data: topRatedMoviesData,
+        loadMore: loadMoreTopRated
+    } = useMovies(TOP_RATED);
+    const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results) || [];
 
     return (
-        <ScrollView style={styles.home_container}>
+        <ScrollView style={[styles.home_container, theme.colors]}>
 
             <Corousel data={trendingShows ? trendingShows.results : []} />
             <ListHeader title="Popular Movies" onSeeMore={gotoPopularMovies} />
@@ -62,7 +55,7 @@ const Home = () => {
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
             {Data ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} /> : <ListPlaceholder />}
             <ListHeader title="Top Rated Movies" onSeeMore={gotoTopRatedMovies} />
-            {Data ? <HorizontalList data={Data.results} /> : <ListPlaceholder />}
+            {Data ? <HorizontalList data={topRatedMovies} onEnd={loadMoreTopRated} /> : <ListPlaceholder />}
         </ScrollView>
     )
 }
