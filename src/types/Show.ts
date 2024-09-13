@@ -6,5 +6,4 @@ export type Show = {
     overview:string,
     genre_ids:number[],
     adult:boolean,
-
 }

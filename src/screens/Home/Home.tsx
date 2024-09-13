@@ -10,38 +10,57 @@ import { Data } from "../../constants/Data";
 import ListPlaceholder from "../../components/ListPlaceholder/ListPlaceholder";
 import HorizontalList from "../../components/HorizontalList/HorizontailList";
 import Corousel from "../../components/Corousel/Corousel";
-import { useEffect, useState } from "react";
-import { Show } from "../../types/Show";
-import { movieService } from "../../services/movieService";
-import { useTrendingShows } from "../../hooks/useMovieQueries";
+import { useMovies, useTrendingShows } from "../../hooks/useMovieQueries";
+import { POPULAR_MOVIES, TOP_RATED, UPCOMING_MOVIES } from "../../constants/QueryType";
 const Home = () => {
-
-    const [posterData, setPosterData] = useState<Show[]>([])
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
-    const gotoTrendingMovies = () => {
-        navigation.navigate("ShowGrid", { title: "Trending Movies", query: "/trending" })
+    const gotoPopularMovies = () => {
+        navigation.navigate("ShowGrid", { title: "Popular Movies", query: POPULAR_MOVIES })
     }
     const gotoUpcomingMovies = () => {
-        navigation.navigate("ShowGrid", { title: "Upcoming Movies", query: "/upcoming" })
+        navigation.navigate("ShowGrid", { title: "Upcoming Movies", query: UPCOMING_MOVIES })
     }
     const gotoTopRatedMovies = () => {
-        navigation.navigate("ShowGrid", { title: "Top Rated Movies", query: "/top-rated" })
+        navigation.navigate("ShowGrid", { title: "Top Rated Movies", query: TOP_RATED })
     }
 
     const {
-        data,
-        error,
-        isLoading
+        data: trendingShows
     } = useTrendingShows();
+
+    const { data: popularMoviesData,
+        hasNextPage: hasNextPagePopularMovies,
+        fetchNextPage: fetchNextPagePopularMovies,
+        isFetchingNextPage: isFetchingNextPagePopularMovies } =
+        useMovies(POPULAR_MOVIES)
+    const popularMovies = popularMoviesData?.pages.flatMap(page => page.results) || [];
+    const loadMorePopularMovies = () => {
+        if (hasNextPagePopularMovies && !isFetchingNextPagePopularMovies) {
+            fetchNextPagePopularMovies();
+        }
+    };
+    const { data: upcomingMoviesData,
+        hasNextPage: hasNextPageUpcomingMovies,
+        fetchNextPage: fetchNextPageUpcomingMovies,
+        isFetchingNextPage: isFetchingNextPageUpcomingMovies } =
+        useMovies(UPCOMING_MOVIES);
+
+    const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results) || [];
+    const loadMoreUpcomingMovies = () => {
+        if (hasNextPageUpcomingMovies && !isFetchingNextPageUpcomingMovies) {
+            fetchNextPageUpcomingMovies();
+        }
+    };
+
 
     return (
         <ScrollView style={styles.home_container}>
 
-            <Corousel data={data ? data.results : []} />
-            <ListHeader title="Trending Movies" onSeeMore={gotoTrendingMovies} />
-            {Data ? <HorizontalList data={Data.results} /> : <ListPlaceholder />}
+            <Corousel data={trendingShows ? trendingShows.results : []} />
+            <ListHeader title="Popular Movies" onSeeMore={gotoPopularMovies} />
+            {<HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} />}
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
-            {Data ? <HorizontalList data={Data.results} /> : <ListPlaceholder />}
+            {Data ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} /> : <ListPlaceholder />}
             <ListHeader title="Top Rated Movies" onSeeMore={gotoTopRatedMovies} />
             {Data ? <HorizontalList data={Data.results} /> : <ListPlaceholder />}
         </ScrollView>

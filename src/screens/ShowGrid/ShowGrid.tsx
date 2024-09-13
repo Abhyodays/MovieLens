@@ -2,10 +2,10 @@ import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native"
 import { MainStackParamList } from "../../navigators/MainStack"
-import { useEffect } from "react"
-import { Data } from "../../constants/Data"
+import { useEffect, useMemo } from "react"
 import ShowCard from "../../components/ShowCard/ShowCard"
 import { useTheme } from "../../contexts/ThemeContext"
+import { useMovies } from "../../hooks/useMovieQueries"
 
 type ShowGridRouteType = {
     route: {
@@ -19,16 +19,27 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const theme = useTheme()
 
+    const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useMovies(route.params.query || "");
+
+    const results = data?.pages.flatMap(page => page.results) || [];
+    const loadMore = () => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    };
     useEffect(() => {
         navigation.setOptions({ title: route.params.title })
     }, [])
     return (
         <FlatList
-            data={Data.results}
+            data={results}
             renderItem={({ item }) => <ShowCard data={item} customStyles={styles.card_style} />}
             numColumns={3}
             contentContainerStyle={[{ backgroundColor: theme.colors.backgroundColor }, styles.container]}
             columnWrapperStyle={styles.row}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.5}
+            keyExtractor={(item) => item.id.toString() + (route.params.query || "popular")}
         />
     )
 }

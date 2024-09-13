@@ -4,20 +4,22 @@ import ShowCard from "../ShowCard/ShowCard"
 import { useTheme } from "../../contexts/ThemeContext"
 
 type HorizontalListPropType = {
-    data: any[]
+    data: any[],
+    onEnd?: () => void
 
 }
-const HorizontalList = ({ data }: HorizontalListPropType) => {
+const HorizontalList = ({ data, onEnd }: HorizontalListPropType) => {
     const theme = useTheme();
     return (
-        <View>
+        <View style={theme.colors}>
             <FlatList
                 data={data}
                 renderItem={({ item }) => <ShowCard data={item} customStyles={{ width: Dimensions.get('screen').width / 2.5 }} />}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.name}
                 horizontal
-                contentContainerStyle={[styles.content_container, theme.colors]}
+                contentContainerStyle={[styles.content_container]}
                 showsHorizontalScrollIndicator={false}
+                onEndReached={onEnd}
             />
         </View>
     )

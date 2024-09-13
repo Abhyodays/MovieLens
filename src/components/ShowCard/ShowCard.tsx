@@ -1,8 +1,6 @@
 import { Image, StyleProp, Text, View, ViewStyle } from "react-native"
 import { Show } from "../../types/Show"
 import { StyleSheet } from "react-native"
-import Colors from "../../constants/Colors"
-import { Dimensions } from "react-native"
 import { useTheme } from "../../contexts/ThemeContext"
 
 type ShowCardPropType = {
