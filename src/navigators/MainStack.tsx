@@ -6,6 +6,7 @@ import Ratings from "../screens/Ratings/Ratings"
 import Watchlist from "../screens/Watchlist/Watchlist"
 import ShowGrid from "../screens/ShowGrid/ShowGrid"
 import { useTheme } from "../contexts/ThemeContext"
+import { MediaType } from "../types/MediaType"
 
 export type MainStackParamList = {
     HomeTabs: undefined,

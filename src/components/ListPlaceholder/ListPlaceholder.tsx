@@ -9,6 +9,7 @@ const ListPlaceholder = () => {
 export default ListPlaceholder;
 const styles = StyleSheet.create({
     container: {
-        height: 300
+        height: 300,
+        backgroundColor: 'red'
     }
 })

@@ -8,6 +8,14 @@ export const useTrendingShows = ()=>{
         queryFn:()=> movieService.getTrendingShows()
     })
 }
+
+export const useMovieDetails = (id:number)=>{
+  return useQuery({
+    queryKey:['movie',id],
+    queryFn:()=> movieService.getMovieDetails(id)
+  })
+}
+
 const getQueryFn = (query: string, pageParam: number) => {
     switch (query) {
       case POPULAR_MOVIES:
@@ -22,7 +30,7 @@ const getQueryFn = (query: string, pageParam: number) => {
   };
   
   export const useMovies = (query: string, page = 1) => {
-    const {data, isFetchingNextPage, hasNextPage,fetchNextPage} = useInfiniteQuery({
+    const res = useInfiniteQuery({
       queryKey: [query, page], 
       queryFn: ({ pageParam = page }) => getQueryFn(query, pageParam), 
       initialPageParam: 1, 
@@ -31,12 +39,20 @@ const getQueryFn = (query: string, pageParam: number) => {
     });
 
     const loadMore = ()=>{
-        if(hasNextPage && !isFetchingNextPage){
-            fetchNextPage();
+        if(res.hasNextPage && !res.isFetchingNextPage){
+            res.fetchNextPage();
         }
     }
-    return {data, loadMore};
+    return {...res,loadMore};
   };
+  
+  export const useMovieCredits = (id:number)=>{
+      return useQuery({
+        queryKey: ["movie", id, "credits"],
+        queryFn:()=> movieService.getMovieCredits(id)
+      })
+  }
+
 
 
 

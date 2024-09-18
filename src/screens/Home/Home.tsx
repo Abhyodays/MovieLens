@@ -1,17 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet } from "react-native"
 import { MainStackParamList } from "../../navigators/MainStack";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTheme } from "../../contexts/ThemeContext";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
 import ListHeader from "../../components/ListHeader/ListHeader";
-import { Data } from "../../constants/Data";
 import ListPlaceholder from "../../components/ListPlaceholder/ListPlaceholder";
 import HorizontalList from "../../components/HorizontalList/HorizontailList";
 import Corousel from "../../components/Corousel/Corousel";
 import { useMovies, useTrendingShows } from "../../hooks/useMovieQueries";
 import { POPULAR_MOVIES, TOP_RATED, UPCOMING_MOVIES } from "../../constants/QueryType";
+
 const Home = () => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const gotoPopularMovies = () => {
@@ -42,20 +42,22 @@ const Home = () => {
 
     const {
         data: topRatedMoviesData,
-        loadMore: loadMoreTopRated
+        loadMore: loadMoreTopRated,
+        isLoading,
+        isSuccess
     } = useMovies(TOP_RATED);
     const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results) || [];
 
+
     return (
         <ScrollView style={[styles.home_container, theme.colors]}>
-
             <Corousel data={trendingShows ? trendingShows.results : []} />
             <ListHeader title="Popular Movies" onSeeMore={gotoPopularMovies} />
-            {<HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} />}
+            {isSuccess ? <HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} /> : <ListPlaceholder />}
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
-            {Data ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} /> : <ListPlaceholder />}
+            {isSuccess ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} /> : <ListPlaceholder />}
             <ListHeader title="Top Rated Movies" onSeeMore={gotoTopRatedMovies} />
-            {Data ? <HorizontalList data={topRatedMovies} onEnd={loadMoreTopRated} /> : <ListPlaceholder />}
+            {isSuccess ? <HorizontalList data={topRatedMovies} onEnd={loadMoreTopRated} /> : <ListPlaceholder />}
         </ScrollView>
     )
 }

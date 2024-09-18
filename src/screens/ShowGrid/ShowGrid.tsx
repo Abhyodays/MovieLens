@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react"
 import ShowCard from "../../components/ShowCard/ShowCard"
 import { useTheme } from "../../contexts/ThemeContext"
 import { useMovies } from "../../hooks/useMovieQueries"
+import Styles from "../../Styles"
 
 type ShowGridRouteType = {
     route: {
@@ -22,21 +23,24 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
     const { data, loadMore } = useMovies(route.params.query || "");
 
     const results = data?.pages.flatMap(page => page.results) || [];
+    const page = data?.pages[0].page || 0
 
     useEffect(() => {
         navigation.setOptions({ title: route.params.title })
     }, [])
     return (
-        <FlatList
-            data={results}
-            renderItem={({ item }) => <ShowCard data={item} customStyles={styles.card_style} />}
-            numColumns={3}
-            contentContainerStyle={[{ backgroundColor: theme.colors.backgroundColor }, styles.container]}
-            columnWrapperStyle={styles.row}
-            onEndReached={loadMore}
-            onEndReachedThreshold={0.5}
-            keyExtractor={(item) => item.id.toString() + (route.params.query || "popular")}
-        />
+        <View style={theme.colors}>
+            <FlatList
+                data={results}
+                renderItem={({ item }) => <ShowCard data={item} customStyles={styles.card_style} />}
+                numColumns={3}
+                contentContainerStyle={[styles.container]}
+                columnWrapperStyle={styles.row}
+                onEndReached={loadMore}
+                onEndReachedThreshold={0.5}
+                keyExtractor={(item) => item.id.toString() + (route.params.query || "popular")}
+            />
+        </View>
     )
 }
 
