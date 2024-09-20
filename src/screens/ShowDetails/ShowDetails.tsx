@@ -1,13 +1,17 @@
 
-import { ImageBackground, StatusBar, StyleSheet, Text, View, ScrollView } from "react-native"
+import { ImageBackground, StatusBar, StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native"
 
-import { useMovieCredits, useMovieDetails } from "../../hooks/useMovieQueries"
+import { useMovieCredits, useMovieDetails, useMovieImages } from "../../hooks/useMovieQueries"
 import Colors from "../../constants/Colors"
 import Icon from 'react-native-vector-icons/AntDesign'
 import NavigationButton from "../../components/NavigationButton/NavigationButton"
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { MainStackParamList } from "../../navigators/MainStack"
+import { useTheme } from "../../contexts/ThemeContext"
+import ListHeader from "../../components/ListHeader/ListHeader"
+import HorizontalList from "../../components/HorizontalList/HorizontailList"
+import ImageCard from "../../components/ImageCard/ImageCard"
 
 type ShowDetailsPropType = {
     route: {
@@ -21,19 +25,27 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
     const { data } = useMovieDetails(id);
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const release_date = new Date(data?.release_date).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric" })
+
     const gotoAwards = () => {
 
     }
     const gotoCast = () => {
-        navigation.navigate('Cast');
+        navigation.navigate('Cast', { id });
     }
     const gotoRatings = () => {
         navigation.navigate('Ratings');
     }
-    const credits = useMovieCredits(id);
-    console.log("credits:", credits.data?.cast)
+    const gotoImageCarousel = () => {
+        navigation.push("CarousalScreen", { movieId: id, title: 'Images' })
+    }
+    const { data: credits } = useMovieCredits(id);
+    const actors = credits?.cast.filter((c: any) => c.known_for_department.toLowerCase() === "acting").slice(0, 2).map((a: any) => a.name)?.join(", ")
+    const director = credits?.crew.find((c: any) => c.department === "Directing");
+    const { data: imagesData } = useMovieImages(id);
+    const images = imagesData?.backdrops.map((image: any) => ({ path: image.file_path, id: image.file_path, movieId: id }));
+    const theme = useTheme();
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: Colors.white }}>
+        <ScrollView style={[{ flex: 1 }, theme.colors]}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.blur} translucent={true} />
             <ImageBackground source={{ uri: `${process.env.IMAGE_POSTER_URI}${data?.poster_path}` }} style={styles.posterImage} resizeMode="cover">
                 <View style={styles.overlay}>
@@ -54,18 +66,24 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
             <View style={styles.container}>
                 <View style={[styles.flex_row, styles.navigation_button_container]}>
                     <NavigationButton title="Rating" handlePress={gotoRatings} />
-                    <NavigationButton title="Awards" handlePress={gotoAwards} />
                     <NavigationButton title="Cast" handlePress={gotoCast} />
+                    <NavigationButton title="Videos" handlePress={gotoAwards} />
                 </View>
-                <View >
-                    <Text style={styles.heading}>Release date</Text>
-                    <Text>{release_date}</Text>
-                    <Text style={styles.heading}>Director:</Text>
-                    <Text>{release_date}</Text>
-                    <Text style={styles.heading}>Cast:</Text>
-                    <Text>{release_date}</Text>
+                <Text style={[styles.heading, styles.text, theme.colors]}>Release date</Text>
+                <Text style={[styles.text]}>{release_date}</Text>
+                <Text style={[styles.heading, styles.text, theme.colors]}>Director:</Text>
+                <Text style={[styles.text]}>{director?.name}</Text>
+                <View style={[styles.flex_row, styles.flex_center]}>
+                    <View>
+                        <Text style={[styles.heading, styles.text, theme.colors]}>Cast:</Text>
+                        <Text style={styles.text}>{actors}</Text>
+                    </View>
+                    <Icon name="right" style={[styles.right_icon, { color: theme.colors.color }]} onPress={gotoCast} />
                 </View>
             </View>
+            <ListHeader title="Photos" onSeeMore={gotoImageCarousel} />
+            <HorizontalList data={images} CardComponent={ImageCard} />
+
         </ScrollView>
     )
 }
@@ -110,15 +128,24 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20
     },
-    heading: {
+    text: {
         fontSize: 16,
-        color: Colors.black,
+        color: Colors.gray
+    },
+    heading: {
         fontWeight: '500',
         marginTop: 10
     },
     value: {
         fontSize: 16,
         color: Colors.gray
+    },
+    right_icon: {
+        fontSize: 24,
+        color: Colors.black
+    },
+    flex_center: {
+        justifyContent: 'space-between'
     }
 })
 export default ShowDetails;

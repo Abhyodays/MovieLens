@@ -62,6 +62,15 @@ export const movieService = {
             console.log("Error in fetching movie credits:", error)
             throw error;
         }
+    },
+    getMovieImages: async(id:number)=>{
+        try{
+            const response = await client.get(`/movie/${id}/images`);
+            return response.data;
+        }catch(error){
+            console.log("Error while fetching images.");
+            throw error;
+        }
     }
 
 

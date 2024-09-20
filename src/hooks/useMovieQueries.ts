@@ -53,6 +53,13 @@ const getQueryFn = (query: string, pageParam: number) => {
       })
   }
 
+  export const useMovieImages = (id:number)=>{
+    return useQuery({
+      queryKey:['movie', id, 'images'],
+      queryFn: ()=> movieService.getMovieImages(id)
+    })
+  }
+
 
 
 

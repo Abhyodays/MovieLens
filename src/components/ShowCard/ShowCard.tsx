@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { MainStackParamList } from "../../navigators/MainStack"
 
-type ShowCardPropType = {
+export type ShowCardPropType = {
     data: Show,
     customStyles?: StyleProp<ViewStyle>
 }
@@ -15,13 +15,14 @@ const ShowCard = ({ data, customStyles }: ShowCardPropType) => {
     const theme = useTheme();
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>()
     const gotoDetails = () => {
+        if (!(data && data.id)) return;
         navigation.navigate("ShowDetails", { id: data.id })
     }
     return (
         <TouchableOpacity onPress={gotoDetails} activeOpacity={0.7}>
             <View style={[styles.container, customStyles]}>
-                <Image source={{ uri: `${process.env.IMAGE_URI}${data.poster_path}` }} style={styles.card_image} resizeMode="cover" />
-                <Text numberOfLines={2} style={[styles.card_title, theme.colors]}>{data.name || data.title}</Text>
+                <Image source={{ uri: `${process.env.IMAGE_URI}${data?.poster_path}` }} style={styles.card_image} resizeMode="cover" />
+                <Text numberOfLines={2} style={[styles.card_title, theme.colors]}>{data?.name || data?.title}</Text>
             </View>
         </TouchableOpacity>
     )

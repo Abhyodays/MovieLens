@@ -8,9 +8,11 @@ import Colors from "../../constants/Colors";
 import ListHeader from "../../components/ListHeader/ListHeader";
 import ListPlaceholder from "../../components/ListPlaceholder/ListPlaceholder";
 import HorizontalList from "../../components/HorizontalList/HorizontailList";
-import Corousel from "../../components/Corousel/Corousel";
 import { useMovies, useTrendingShows } from "../../hooks/useMovieQueries";
 import { POPULAR_MOVIES, TOP_RATED, UPCOMING_MOVIES } from "../../constants/QueryType";
+import ShowCard from "../../components/ShowCard/ShowCard";
+import Carousel from "../../components/Carousel/Carousel";
+import Slide from "../../components/Slide/Slide";
 
 const Home = () => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
@@ -48,16 +50,15 @@ const Home = () => {
     } = useMovies(TOP_RATED);
     const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results) || [];
 
-
     return (
         <ScrollView style={[styles.home_container, theme.colors]}>
-            <Corousel data={trendingShows ? trendingShows.results : []} />
+            <Carousel data={trendingShows ? trendingShows.results : []} CardComponent={Slide} />
             <ListHeader title="Popular Movies" onSeeMore={gotoPopularMovies} />
-            {isSuccess ? <HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} /> : <ListPlaceholder />}
+            {popularMovies.length > 0 ? <HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} CardComponent={ShowCard} /> : <ListPlaceholder />}
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
-            {isSuccess ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} /> : <ListPlaceholder />}
+            {upcomingMovies.length > 0 ? <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} CardComponent={ShowCard} /> : <ListPlaceholder />}
             <ListHeader title="Top Rated Movies" onSeeMore={gotoTopRatedMovies} />
-            {isSuccess ? <HorizontalList data={topRatedMovies} onEnd={loadMoreTopRated} /> : <ListPlaceholder />}
+            {topRatedMovies.length > 0 ? <HorizontalList data={topRatedMovies} onEnd={loadMoreTopRated} CardComponent={ShowCard} /> : <ListPlaceholder />}
         </ScrollView>
     )
 }
