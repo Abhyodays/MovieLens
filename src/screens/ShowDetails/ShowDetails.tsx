@@ -33,10 +33,10 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
         navigation.navigate('Cast', { id });
     }
     const gotoRatings = () => {
-        navigation.navigate('Ratings');
+        navigation.navigate('Ratings', { id });
     }
     const gotoImageCarousel = () => {
-        navigation.push("CarousalScreen", { movieId: id, title: 'Images' })
+        navigation.navigate("CarousalScreen", { movieId: id, title: 'Images' })
     }
     const { data: credits } = useMovieCredits(id);
     const actors = credits?.cast.filter((c: any) => c.known_for_department.toLowerCase() === "acting").slice(0, 2).map((a: any) => a.name)?.join(", ")
@@ -83,6 +83,7 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
             </View>
             <ListHeader title="Photos" onSeeMore={gotoImageCarousel} />
             <HorizontalList data={images} CardComponent={ImageCard} />
+
 
         </ScrollView>
     )

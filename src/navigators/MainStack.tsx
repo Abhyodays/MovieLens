@@ -12,7 +12,7 @@ import CarousalScreen from "../screens/CarousalScreen/CarousalScreen"
 export type MainStackParamList = {
     HomeTabs: undefined,
     ShowDetails: { id: number },
-    Ratings: undefined,
+    Ratings: { id: number },
     Cast: { id: number },
     Watchlist: undefined,
     ShowGrid: { title?: string, query?: string },
@@ -26,7 +26,7 @@ const MainStack = () => {
             <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
             <Stack.Screen name="ShowDetails" component={ShowDetails} options={{ headerShown: false }} />
             <Stack.Screen name="Cast" component={Cast} />
-            <Stack.Screen name="Ratings" component={Ratings} />
+            <Stack.Screen name="Ratings" component={Ratings} options={{ title: 'User Reviews' }} />
             <Stack.Screen name="Watchlist" component={Watchlist} />
             <Stack.Screen name="ShowGrid" component={ShowGrid} />
             <Stack.Screen name="CarousalScreen" component={CarousalScreen} />

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { Show } from "../types/Show";
 import { client } from "../axios/axiosClient";
-import { ApiResponse } from "../types/Response";
+import { ApiResponse, RatingResponse } from "../types/Response";
 
 
 
@@ -66,6 +66,15 @@ export const movieService = {
     getMovieImages: async(id:number)=>{
         try{
             const response = await client.get(`/movie/${id}/images`);
+            return response.data;
+        }catch(error){
+            console.log("Error while fetching images.");
+            throw error;
+        }
+    },
+    getMovieReviews: async(id:number):Promise<RatingResponse>=>{
+        try{
+            const response = await client.get(`/movie/533535/reviews`);
             return response.data;
         }catch(error){
             console.log("Error while fetching images.");

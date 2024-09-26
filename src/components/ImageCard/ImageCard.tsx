@@ -14,7 +14,7 @@ const ImageCard = ({ data }: ImageCardPropType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
 
     const openCarousel = (id: string) => {
-        navigation.push("CarousalScreen", { id, title: "Images", movieId: data.movieId })
+        navigation.navigate("CarousalScreen", { id, title: "Images", movieId: data.movieId })
     }
     return (
         <TouchableOpacity onPress={() => openCarousel(data.path)}>

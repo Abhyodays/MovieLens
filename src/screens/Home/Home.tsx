@@ -46,7 +46,8 @@ const Home = () => {
         data: topRatedMoviesData,
         loadMore: loadMoreTopRated,
         isLoading,
-        isSuccess
+        isSuccess,
+        error
     } = useMovies(TOP_RATED);
     const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results) || [];
 

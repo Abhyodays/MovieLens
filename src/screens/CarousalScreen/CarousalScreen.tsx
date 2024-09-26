@@ -30,7 +30,7 @@ const CarousalScreen = ({ route }: ScreenProps) => {
         navigation.setOptions({
             title
         })
-    })
+    }, [])
 
     return (
         <View>
