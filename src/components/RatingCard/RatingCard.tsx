@@ -1,6 +1,6 @@
 import { Animated, Dimensions, Easing, LayoutChangeEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Rating } from "../../types/Rating";
-import { useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import AvatarIcon from "../AvatarIcon/AvatarIcon";
 import { useTheme } from "../../contexts/ThemeContext";
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -22,7 +22,6 @@ const RatingCard = ({ data, expand, onPress }: RatingCardPropType) => {
     const handleLayoutChange = (event: LayoutChangeEvent) => {
         textHeightRef.current = Math.max(minHeight, event.nativeEvent.layout.height)
     }
-    const screenWidth = Math.floor(Dimensions.get('window').width)
     useEffect(() => {
         if (isExpand) {
             Animated.timing(heightRef, {
@@ -101,4 +100,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 })
-export default RatingCard;
+export default memo(RatingCard);

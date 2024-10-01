@@ -7,6 +7,7 @@ type HorizontalListPropType<T> = {
     data: T[];
     onEnd?: () => void;
     CardComponent: (props: { data: T, customStyles: object }) => React.ReactNode;
+    isFetching?: () => boolean
 };
 
 const HorizontalList = <T,>({ data, onEnd, CardComponent }: HorizontalListPropType<T>) => {
@@ -25,8 +26,8 @@ const HorizontalList = <T,>({ data, onEnd, CardComponent }: HorizontalListPropTy
                 showsHorizontalScrollIndicator={false}
                 onEndReached={onEnd}
                 onEndReachedThreshold={0.5}
-                initialNumToRender={3}
-                maxToRenderPerBatch={3}
+                initialNumToRender={5}
+                maxToRenderPerBatch={5}
                 windowSize={5}
                 getItemLayout={(data, index) => ({
                     length: screenWidth,

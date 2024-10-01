@@ -11,6 +11,7 @@ const Styles = StyleSheet.create({
         fontFamily:'Oswald-Bold'
     },
     container:{
+        flex:1,
         paddingHorizontal: 20
     }
 })

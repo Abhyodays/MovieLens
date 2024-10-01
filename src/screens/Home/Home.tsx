@@ -33,13 +33,13 @@ const Home = () => {
     const { data: popularMoviesData,
         loadMore: loadMorePopularMovies
     } = useMovies(POPULAR_MOVIES)
-    const popularMovies = popularMoviesData?.pages.flatMap(page => page.results) || [];
+    const popularMovies = popularMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, id: `${tr.id}_${page.page}` }))) || [];
     const {
         data: upcomingMoviesData,
         loadMore: loadMoreUpcomingMovies
     } = useMovies(UPCOMING_MOVIES);
 
-    const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results) || [];
+    const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results.map(uc => ({ ...uc, id: `${uc.id}_${page.page}` }))) || [];
     const theme = useTheme();
 
     const {
@@ -49,7 +49,7 @@ const Home = () => {
         isSuccess,
         error
     } = useMovies(TOP_RATED);
-    const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results) || [];
+    const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, id: `${tr.id}_${page.page}` }))) || [];
 
     return (
         <ScrollView style={[styles.home_container, theme.colors]}>

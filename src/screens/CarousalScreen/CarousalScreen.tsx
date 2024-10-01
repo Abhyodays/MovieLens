@@ -12,7 +12,7 @@ type ScreenProps = {
         params: {
             title?: string,
             id?: number | string,
-            movieId: number,
+            movieId: string,
         }
     }
 }

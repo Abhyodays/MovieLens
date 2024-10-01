@@ -7,6 +7,8 @@ import ShowCard from "../../components/ShowCard/ShowCard"
 import { useTheme } from "../../contexts/ThemeContext"
 import { useMovies } from "../../hooks/useMovieQueries"
 import Styles from "../../Styles"
+import { ActivityIndicator } from "react-native-paper"
+import Loading from "../../components/Loading/Loading"
 
 type ShowGridRouteType = {
     route: {
@@ -20,10 +22,11 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const theme = useTheme()
 
-    const { data, loadMore } = useMovies(route.params.query || "");
+    const { data, loadMore, isFetching } = useMovies(route.params.query || "");
 
-    const results = data?.pages.flatMap(page => page.results) || [];
+    const results = data?.pages.flatMap(page => page.results.map(r => ({ ...r, id: `${r.id}_${page.page}` }))) || [];
     const page = data?.pages[0].page || 0
+    console.log(isFetching)
 
     useEffect(() => {
         navigation.setOptions({ title: route.params.title })
@@ -37,8 +40,15 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
                 contentContainerStyle={[styles.container]}
                 columnWrapperStyle={styles.row}
                 onEndReached={loadMore}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.8}
                 keyExtractor={(item) => item.id.toString() + (route.params.query || "popular")}
+                ListFooterComponent={() => {
+                    if (isFetching) {
+                        return (
+                            <Loading />
+                        )
+                    }
+                }}
             />
         </View>
     )

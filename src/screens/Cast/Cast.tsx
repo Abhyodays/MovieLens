@@ -7,7 +7,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 type CastPropType = {
     route: {
         params: {
-            id: number
+            id: string
         }
     }
 }

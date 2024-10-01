@@ -8,7 +8,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 type RatingsPropType = {
     route: {
         params: {
-            id: number
+            id: string
         }
     }
 }
@@ -19,7 +19,6 @@ const Ratings = ({ route }: RatingsPropType) => {
     const handlePress = (id: string) => {
         setExpand(id);
     }
-    console.log(route.params.id)
     const theme = useTheme();
 
     return (

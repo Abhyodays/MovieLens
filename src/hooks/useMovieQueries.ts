@@ -9,7 +9,7 @@ export const useTrendingShows = ()=>{
     })
 }
 
-export const useMovieDetails = (id:number)=>{
+export const useMovieDetails = (id:string)=>{
   return useQuery({
     queryKey:['movie',id],
     queryFn:()=> movieService.getMovieDetails(id)
@@ -36,7 +36,6 @@ const getQueryFn = (query: string, pageParam: number) => {
       initialPageParam: 1, 
       getNextPageParam: (lastPage) =>
         lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined, 
-      staleTime:Infinity
     });
 
     const loadMore = ()=>{
@@ -47,26 +46,66 @@ const getQueryFn = (query: string, pageParam: number) => {
     return {...res,loadMore};
   };
   
-  export const useMovieCredits = (id:number)=>{
+  export const useMovieCredits = (id:string)=>{
       return useQuery({
         queryKey: ["movie", id, "credits"],
         queryFn:()=> movieService.getMovieCredits(id)
       })
   }
 
-  export const useMovieImages = (id:number)=>{
+  export const useMovieImages = (id:string)=>{
     return useQuery({
       queryKey:['movie', id, 'images'],
       queryFn: ()=> movieService.getMovieImages(id)
     })
   }
 
-  export const useMovieReviews = (id:number)=>{
+  export const useMovieReviews = (id:string)=>{
     return useQuery({
       queryKey:['movie','reviews', id],
       queryFn:()=> movieService.getMovieReviews(id)
     })
   }
 
+  export const useDiscoverQuery = (query:string, page:number)=>{
+    const res = useInfiniteQuery({
+      queryKey: [query, page], 
+      queryFn: ({ pageParam = page }) => movieService.discoverMovies(query,pageParam), 
+      initialPageParam: 1, 
+      getNextPageParam: (lastPage) =>
+        lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined, 
+    });
+
+    const loadMore = ()=>{
+        if(res.hasNextPage && !res.isFetchingNextPage){
+            res.fetchNextPage();
+        }
+    }
+    return {...res,loadMore};
+  }
+
+  export const useSearchMovies = (query:string,page=1)=>{
+    const res = useInfiniteQuery({
+      queryKey:['search','movies',query,page],
+      queryFn: ({pageParam=page})=> movieService.searchMovies(query, pageParam),
+      initialPageParam:1,
+      getNextPageParam: (lastPage)=>
+        lastPage.page< lastPage.total_pages?lastPage.page+1:undefined,
+      enabled: !!query
+    })
+
+    const loadMore = ()=>{
+      if(res.hasNextPage && !res.isFetchingNextPage){
+          res.fetchNextPage();
+      }
+    }
+    return {...res,loadMore};
+  }
+  export const useMovieGenres = ()=>{
+    return useQuery({
+      queryKey:['movie', 'genres'],
+      queryFn: ()=>movieService.getAllMovieGenres()
+    })
+  }
 
 

@@ -1,5 +1,5 @@
 export type Show = {
-    id:number,
+    id:string,
     title?:string,
     name?:string,
     poster_path:string,

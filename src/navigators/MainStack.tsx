@@ -8,15 +8,17 @@ import ShowGrid from "../screens/ShowGrid/ShowGrid"
 import { useTheme } from "../contexts/ThemeContext"
 import { MediaType } from "../types/MediaType"
 import CarousalScreen from "../screens/CarousalScreen/CarousalScreen"
+import Search from "../screens/Search/Search"
 
 export type MainStackParamList = {
     HomeTabs: undefined,
-    ShowDetails: { id: number },
-    Ratings: { id: number },
-    Cast: { id: number },
+    ShowDetails: { id: string },
+    Ratings: { id: string },
+    Cast: { id: string },
     Watchlist: undefined,
     ShowGrid: { title?: string, query?: string },
-    CarousalScreen: { title?: string, id?: number | string, movieId: number }
+    CarousalScreen: { title?: string, id: string, movieId: string }
+    Search: undefined
 }
 const MainStack = () => {
     const Stack = createStackNavigator<MainStackParamList>();
@@ -30,6 +32,7 @@ const MainStack = () => {
             <Stack.Screen name="Watchlist" component={Watchlist} />
             <Stack.Screen name="ShowGrid" component={ShowGrid} />
             <Stack.Screen name="CarousalScreen" component={CarousalScreen} />
+            <Stack.Screen name="Search" component={Search} options={{ headerShown: false, animationEnabled: false }} />
         </Stack.Navigator>
     )
 }

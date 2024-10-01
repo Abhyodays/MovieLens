@@ -2,9 +2,11 @@ import axios, { AxiosError } from "axios";
 import { Show } from "../types/Show";
 import { client } from "../axios/axiosClient";
 import { ApiResponse, RatingResponse } from "../types/Response";
+import { Genre } from "../types/Genre";
 
-
-
+type Genres = {
+    genres:Genre[]
+}
 
 export const movieService = {
     getTrendingShows :async():Promise<ApiResponse>=>{
@@ -45,7 +47,7 @@ export const movieService = {
             throw err;
         }
     },
-    getMovieDetails:async(id:number)=>{
+    getMovieDetails:async(id:string)=>{
         try{
             const response =  await client.get(`/movie/${id}?language=en-US`);
             return response.data;
@@ -54,7 +56,7 @@ export const movieService = {
             throw err;
         }
     },
-    getMovieCredits:async(id:number)=>{
+    getMovieCredits:async(id:string)=>{
         try{
             const response =  await client.get(`/movie/${id}/credits?language=en-US`);
             return response.data;
@@ -63,7 +65,7 @@ export const movieService = {
             throw error;
         }
     },
-    getMovieImages: async(id:number)=>{
+    getMovieImages: async(id:string)=>{
         try{
             const response = await client.get(`/movie/${id}/images`);
             return response.data;
@@ -72,7 +74,7 @@ export const movieService = {
             throw error;
         }
     },
-    getMovieReviews: async(id:number):Promise<RatingResponse>=>{
+    getMovieReviews: async(id:string):Promise<RatingResponse>=>{
         try{
             const response = await client.get(`/movie/533535/reviews`);
             return response.data;
@@ -80,7 +82,35 @@ export const movieService = {
             console.log("Error while fetching images.");
             throw error;
         }
-    }
+    },
+    discoverMovies:async(query:string, page:number)=>{
+        try{
+            const res = await client.get(`${query}&page=${page}&sort_by=popularity.desc`);
+            return res.data;
+        }catch(error){
+            console.log("Error in searching movies:", error);
+            throw error;
+        }
+    },
 
+    searchMovies: async(query:string, page:number):Promise<ApiResponse>=>{
+        try{
+            const res = await client.get(`/search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`)
+            return res.data;
+        }catch(error){
+            console.log("Error in searching movies:", error);
+            throw error;
+        }
+    },
+    getAllMovieGenres:async():Promise<Genres> =>{
+        try{
+            const res = await client.get('/genre/movie/list?language=en');
+            return res.data;
+        }
+        catch(error){
+            console.log("Error in getting movie genres:", error);
+            throw error;
+        }
+    }
 
 }
