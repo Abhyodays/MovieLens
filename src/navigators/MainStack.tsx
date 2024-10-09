@@ -9,6 +9,7 @@ import { useTheme } from "../contexts/ThemeContext"
 import { MediaType } from "../types/MediaType"
 import CarousalScreen from "../screens/CarousalScreen/CarousalScreen"
 import Search from "../screens/Search/Search"
+import SignUp from "../screens/SignIn/SignUp"
 
 export type MainStackParamList = {
     HomeTabs: undefined,
@@ -18,7 +19,9 @@ export type MainStackParamList = {
     Watchlist: undefined,
     ShowGrid: { title?: string, query?: string },
     CarousalScreen: { title?: string, id: string, movieId: string }
-    Search: undefined
+    Search: undefined,
+    SignIn: undefined,
+    SignUp: undefined
 }
 const MainStack = () => {
     const Stack = createStackNavigator<MainStackParamList>();
@@ -33,6 +36,7 @@ const MainStack = () => {
             <Stack.Screen name="ShowGrid" component={ShowGrid} />
             <Stack.Screen name="CarousalScreen" component={CarousalScreen} />
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false, animationEnabled: false }} />
+            <Stack.Screen name="SignUp" component={SignUp} options={{ title: "Sign Up" }} />
         </Stack.Navigator>
     )
 }

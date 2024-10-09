@@ -2,10 +2,10 @@ import { Image, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react
 import { Show } from "../../types/Show"
 import { StyleSheet } from "react-native"
 import { useTheme } from "../../contexts/ThemeContext"
-import { memo } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
-import { MainStackParamList } from "../../navigators/MainStack"
+import { MainStackParamList } from "../../navigators/MainStack";
+import { memo, useState } from "react"
 
 export type ShowCardPropType = {
     data: Show,
@@ -27,6 +27,8 @@ const ShowCard = ({ data, customStyles }: ShowCardPropType) => {
         </TouchableOpacity>
     )
 }
+
+
 const styles = StyleSheet.create({
     card_image: {
         borderRadius: 10,

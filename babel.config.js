@@ -8,6 +8,16 @@ module.exports = {
         path: '.env'
       }
     ],
-    'react-native-reanimated/plugin'
+    'react-native-reanimated/plugin',
+    [
+      'module-resolver',
+      {
+        root: ['./'],
+        alias: {
+          'moti/skeleton': 'moti/skeleton/react-native-linear-gradient',
+        },
+      },
+    ],
   ]
 };
+

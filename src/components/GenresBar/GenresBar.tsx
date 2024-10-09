@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { useMovieGenres } from "../../hooks/useMovieQueries";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import HorizontalList from "../HorizontalList/HorizontailList";
+import HorizontalList from "../HorizontalList/HorizontalList";
 import NavigationButton from "../NavigationButton/NavigationButton";
 import { useMemo, useState } from "react";
 import { ColorSpace } from "react-native-reanimated";

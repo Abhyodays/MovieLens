@@ -10,8 +10,9 @@ import { StackNavigationProp } from "@react-navigation/stack"
 import { MainStackParamList } from "../../navigators/MainStack"
 import { useTheme } from "../../contexts/ThemeContext"
 import ListHeader from "../../components/ListHeader/ListHeader"
-import HorizontalList from "../../components/HorizontalList/HorizontailList"
+import HorizontalList from "../../components/HorizontalList/HorizontalList"
 import ImageCard from "../../components/ImageCard/ImageCard"
+import Loader from "../../components/Loader/Loader"
 
 type ShowDetailsPropType = {
     route: {
@@ -41,28 +42,34 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
     const { data: credits } = useMovieCredits(id);
     const actors = credits?.cast.filter((c: any) => c.known_for_department.toLowerCase() === "acting").slice(0, 2).map((a: any) => a.name)?.join(", ")
     const director = credits?.crew.find((c: any) => c.department === "Directing");
-    const { data: imagesData } = useMovieImages(id);
+    const { data: imagesData, isLoading: isImagesLoading } = useMovieImages(id);
     const images = imagesData?.backdrops.map((image: any) => ({ path: image.file_path, id: image.file_path, movieId: id }));
     const theme = useTheme();
     return (
         <ScrollView style={[{ flex: 1 }, theme.colors]}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.blur} translucent={true} />
-            <ImageBackground source={{ uri: `${process.env.IMAGE_POSTER_URI}${data?.poster_path}` }} style={styles.posterImage} resizeMode="cover">
-                <View style={styles.overlay}>
-                    <Text style={styles.title}>{data?.title}</Text>
-                    <View style={[styles.flex_row, { gap: 20 }]}>
-                        <View style={styles.flex_row}>
-                            <Icon name="clockcircleo" color={Colors.primary} size={15} />
-                            <Text style={styles.gold_text}>{data?.runtime} minutes</Text>
-                        </View>
-                        <View style={styles.flex_row}>
-                            <Icon name="star" color={Colors.primary} />
-                            <Text style={styles.gold_text}>{data?.vote_average.toFixed(1)}</Text>
-                        </View>
+            {
+                isImagesLoading
+                    ? <View style={styles.posterImage}>
+                        <Loader.Carousel height={200} />
                     </View>
-                    <Text style={styles.overview}>{data?.overview}</Text>
-                </View>
-            </ImageBackground>
+                    : <ImageBackground source={{ uri: `${process.env.IMAGE_POSTER_URI}${data?.poster_path}` }} style={styles.posterImage} resizeMode="cover">
+                        <View style={styles.overlay}>
+                            <Text style={styles.title}>{data?.title}</Text>
+                            <View style={[styles.flex_row, { gap: 20 }]}>
+                                <View style={styles.flex_row}>
+                                    <Icon name="clockcircleo" color={Colors.primary} size={15} />
+                                    <Text style={styles.gold_text}>{data?.runtime} minutes</Text>
+                                </View>
+                                <View style={styles.flex_row}>
+                                    <Icon name="star" color={Colors.primary} />
+                                    <Text style={styles.gold_text}>{data?.vote_average.toFixed(1)}</Text>
+                                </View>
+                            </View>
+                            <Text style={styles.overview}>{data?.overview}</Text>
+                        </View>
+                    </ImageBackground>
+            }
             <View style={styles.container}>
                 <View style={[styles.flex_row, styles.navigation_button_container]}>
                     <NavigationButton title="Rating" handlePress={gotoRatings} />
@@ -82,7 +89,7 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
                 </View>
             </View>
             <ListHeader title="Photos" onSeeMore={gotoImageCarousel} />
-            <HorizontalList data={images} CardComponent={ImageCard} />
+            <HorizontalList data={images} CardComponent={ImageCard} isLoading={isImagesLoading} />
 
 
         </ScrollView>

@@ -1,7 +1,4 @@
 import { Dimensions, View, FlatList, StyleSheet } from "react-native"
-import { Data } from "../../constants/Data"
-import Slide from "../Slide/Slide"
-import { Show } from "../../types/Show"
 import { useTheme } from "../../contexts/ThemeContext"
 
 type CarouselPropType<T> = {

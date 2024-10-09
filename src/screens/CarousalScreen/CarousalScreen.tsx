@@ -20,7 +20,7 @@ type ScreenProps = {
 const CarousalScreen = ({ route }: ScreenProps) => {
     const { id, title, movieId } = route.params;
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
-    const { data: imagesData } = useMovieImages(movieId);
+    const { data: imagesData, isFetching } = useMovieImages(movieId);
     const images: any[] = imagesData?.backdrops.map((image: any) => ({ path: image.file_path, id: image.file_path }))
     let index = images.findIndex(i => i.path === id);
     index = index === -1 ? 0 : index;
