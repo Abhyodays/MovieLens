@@ -2,28 +2,80 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { useTheme } from "../../contexts/ThemeContext"
 import Styles from "../../Styles"
 import Colors from "../../constants/Colors"
-import { Button } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { MainStackParamList } from "../../navigators/MainStack"
-import Loader from "../../components/Loader/Loader"
+import Snackbar from "react-native-snackbar"
+import { Fragment, useEffect, useState } from "react"
+import { useFirebaseContext } from "../../firebase/FirebaseContext"
 
+
+
+
+type User = {
+    name: string,
+    email: string
+}
 const Profile = () => {
     const { toggleTheme, colors } = useTheme();
+    const [user, setUser] = useState<User | null>()
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
+    const { isLoggedIn, setIsLoggedIn, firebase } = useFirebaseContext()
     const handleLogin = () => {
-        navigation.navigate("SignUp")
+        navigation.navigate("SignIn")
     }
+    const logout = () => {
+        firebase.logout()
+            .then(() => {
+                setIsLoggedIn(false);
+                setUser(null)
+                Snackbar.show({
+                    text: "Logged out successfully",
+                    duration: Snackbar.LENGTH_SHORT
+                })
+            })
+            .catch(_ => { })
+    }
+    useEffect(() => {
+        firebase.getUser()
+            .then(response => {
+                if (response) {
+                    const user: User = {
+                        email: response.email!,
+                        name: response.displayName!
+                    }
+                    setUser(user)
+                }
+            })
+    }, [firebase, isLoggedIn])
+
 
     return (
         <View style={[Styles.container, colors]}>
+            {
+                user ?
+                    <View style={styles.card}>
+                        <Text style={[{ color: colors.color }, styles.card_text]}>{user.name}</Text>
+                    </View>
+                    :
+                    <TouchableOpacity onPress={handleLogin}>
+                        <View style={styles.card}>
+                            <Text style={[{ color: colors.color }, styles.card_text]}>Login</Text>
+                        </View>
+                    </TouchableOpacity>
+            }
             <TouchableOpacity onPress={toggleTheme}>
                 <View style={styles.card}>
                     <Text style={[{ color: colors.color }, styles.card_text]}>Change Theme</Text>
                 </View>
             </TouchableOpacity>
-            <Button title="Login" onPress={handleLogin} />
-            <Loader.ShowCard />
+
+            {user &&
+                <TouchableOpacity onPress={logout}>
+                    <View style={styles.card}>
+                        <Text style={[styles.card_text, { color: 'red', fontWeight: 'bold' }]}>Logout</Text>
+                    </View>
+                </TouchableOpacity>}
         </View>
     )
 }
@@ -31,7 +83,6 @@ const Profile = () => {
 const styles = StyleSheet.create({
     card: {
         height: 55,
-        borderTopWidth: 1,
         borderBottomWidth: 1,
         borderColor: Colors.gray,
         justifyContent: 'center'

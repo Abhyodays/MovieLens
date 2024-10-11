@@ -1,70 +1,64 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { TextInput, Button } from 'react-native-paper';
-import Colors from '../../constants/Colors';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { Text, View } from "moti"
+import { MainStackParamList } from "../../navigators/MainStack";
+import { Controller, useForm } from "react-hook-form";
+import { Button, TextInput } from "react-native-paper";
+import Colors from "../../constants/Colors";
+import { Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { useTheme } from "../../contexts/ThemeContext";
+import { PointerType } from "react-native-gesture-handler";
+import { useFirebaseContext } from "../../firebase/FirebaseContext";
+import Icon from 'react-native-vector-icons/AntDesign'
 
-
-type FormData = {
-    name: string;
-    email: string;
-    password: string;
-};
-
-/**
- * 
- * @returns provides SignIn screen
- */
-const SignUp = () => {
-    const theme = useTheme();
+type FormState = {
+    email: string,
+    password: string
+}
+const Login = () => {
+    const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const {
-        control,
         handleSubmit,
+        control,
         formState: { errors }
-    } = useForm<FormData>({
+    } = useForm<FormState>({
         defaultValues: {
-            name: "",
-            password: "",
-            email: ""
+            email: "",
+            password: ""
         }
     });
 
-    const onSubmit = (data: FormData) => {
-        console.log('Form Data:', data);
-    };
-
-    const handlePress = () => {
-        handleSubmit(onSubmit);
-    };
-
-
+    const { setIsLoggedIn, firebase } = useFirebaseContext();
+    const onSubmit = (data: FormState) => {
+        try {
+            firebase.login(data)
+                .then((response) => {
+                    if (response) {
+                        setIsLoggedIn(true)
+                        navigation.navigate("HomeTabs");
+                    }
+                })
+                .catch(error => { throw error })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handlePress = handleSubmit(onSubmit);
+    const theme = useTheme();
+    const goToSignUp = () => {
+        navigation.navigate("SignUp")
+    }
+    const loginWithGoogle = async () => {
+        try {
+            const response = await firebase.loginWithGoogle();
+            setIsLoggedIn(true);
+            navigation.navigate("HomeTabs")
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.backgroundColor }]}>
-            <View style={styles.input}>
-                <Controller
-                    name="name"
-                    control={control}
-                    rules={{
-                        required: 'Name is required',
-                        minLength: {
-                            value: 5,
-                            message: 'Name must be at least 5 characters long'
-                        }
-                    }}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                        <TextInput
-                            label="Name"
-                            mode="outlined"
-                            value={value}
-                            onChangeText={onChange}
-                            activeOutlineColor={Colors.primary}
-                            onBlur={onBlur}
-                        />
-                    )}
-                />
-                {errors?.name && <Text style={{ color: 'red' }}>{errors?.name?.message}</Text>}
-            </View>
             <View style={styles.input}>
                 <Controller
                     name="email"
@@ -127,11 +121,20 @@ const SignUp = () => {
                 mode="elevated"
                 onPress={handlePress}
             >
-                Sign Up
+                Login
             </Button>
+            <TouchableOpacity onPress={goToSignUp}>
+                <Text style={styles.text_link}>Create Account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={loginWithGoogle}>
+                <View style={styles.sigin_button}>
+                    <Icon name="google" color={Colors.primary} size={30} />
+                    <Text style={styles.icon_text}>Sign in with google</Text>
+                </View>
+            </TouchableOpacity>
         </View >
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -148,6 +151,25 @@ const styles = StyleSheet.create({
         maxWidth: 400,
         width: '80%',
     },
+    text_link: {
+        textDecorationLine: 'underline',
+        textDecorationColor: Colors.primary,
+        color: Colors.primary
+    },
+    icon_text: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: Colors.primary
+    },
+    sigin_button: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: Colors.primary,
+        borderRadius: 25,
+        alignItems: 'center',
+        gap: 10,
+        paddingVertical: 7,
+        paddingHorizontal: 10
+    }
 });
-
-export default SignUp;
+export default Login;

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "730728895364",
+    "project_id": "movielens-3e72e",
+    "storage_bucket": "movielens-3e72e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730728895364:android:2bf08f0baf71e544e283d1",
+        "android_client_info": {
+          "package_name": "com.movielens"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730728895364-k7ald0o7epnogmpbq3j89qjkif6jhkmt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.movielens",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "730728895364-s2fm3jsol1u27fvsiraugf9mdfg7ifa1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA07aFkCcQngUMnxWSBSf06Iu6dZvQiPtE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730728895364-s2fm3jsol1u27fvsiraugf9mdfg7ifa1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
