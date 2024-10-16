@@ -5,7 +5,7 @@ import { Show } from "../../types/Show";
 
 type CardGridPropType = {
     data: Show[],
-    loadMore: () => void,
+    loadMore?: () => void,
 }
 const CardGrid = ({ data, loadMore }: CardGridPropType) => {
 

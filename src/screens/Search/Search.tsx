@@ -20,7 +20,7 @@ const Search = () => {
     useEffect(() => {
         const id = setTimeout(() => {
             setDebouncedInput(input);
-        }, 1000);
+        }, 300);
         return (() => clearTimeout(id))
     }, [input]);
 

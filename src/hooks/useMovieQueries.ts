@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { movieService } from "../services/movieService"
 import { POPULAR_MOVIES, TOP_RATED, UPCOMING_MOVIES } from "../constants/QueryType"
+import { Video } from "../types/Video"
 
 export const useTrendingShows = ()=>{
     return useQuery({
@@ -105,6 +106,13 @@ const getQueryFn = (query: string, pageParam: number) => {
     return useQuery({
       queryKey:['movie', 'genres'],
       queryFn: ()=>movieService.getAllMovieGenres()
+    })
+  }
+
+  export const useMovieVideos = (id:string) =>{
+    return useQuery({
+      queryKey:['movie', 'videos', id],
+      queryFn: ()=> movieService.getAllVideos(id)
     })
   }
 

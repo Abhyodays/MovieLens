@@ -2,6 +2,7 @@ import auth from '@react-native-firebase/auth'
 import Snackbar from 'react-native-snackbar'
 import {GoogleSignin} from '@react-native-google-signin/google-signin'
 
+
 type CreateAccountUser = {
     name:string,
     email:string,
@@ -76,6 +77,7 @@ class FirebaseService{
 
     async loginWithGoogle(){
         try{
+            await GoogleSignin.signOut();
             await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
             const { data} = await GoogleSignin.signIn();
             if(data){
@@ -91,6 +93,9 @@ class FirebaseService{
             console.log("Firebase Service :: LoginAccountWithGoogle() :: ",error);
         }
     }
+
+   
+
 
     
 }

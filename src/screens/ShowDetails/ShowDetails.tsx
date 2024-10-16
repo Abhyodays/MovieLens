@@ -13,6 +13,10 @@ import ListHeader from "../../components/ListHeader/ListHeader"
 import HorizontalList from "../../components/HorizontalList/HorizontalList"
 import ImageCard from "../../components/ImageCard/ImageCard"
 import Loader from "../../components/Loader/Loader"
+import { useFirebaseContext } from "../../firebase/FirebaseContext"
+import { Button } from "react-native-paper"
+import useWatchlist from "../../firebase/useWatchlist"
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 type ShowDetailsPropType = {
     route: {
@@ -25,10 +29,13 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
     const { id } = route.params;
     const { data } = useMovieDetails(id);
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
-    const release_date = new Date(data?.release_date).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric" })
+    const release_date = new Date(data?.release_date!).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric" })
+    const { addToWatchlist, watchlist, removeFromWatchlist } = useWatchlist();
+    const { isLoggedIn } = useFirebaseContext();
+    const inWatchlist = watchlist.findIndex(m => m.id === id) !== -1;
 
-    const gotoAwards = () => {
-
+    const gotoVideos = () => {
+        navigation.navigate("Videos", { moviedId: id })
     }
     const gotoCast = () => {
         navigation.navigate('Cast', { id });
@@ -39,12 +46,27 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
     const gotoImageCarousel = () => {
         navigation.navigate("CarousalScreen", { movieId: id, title: 'Images', id })
     }
+    const addToWishlist = async () => {
+        if (!isLoggedIn) {
+            navigation.navigate("SignIn")
+        }
+        if (!data) return;
+        addToWatchlist(data)
+    }
+    const removeFromWishlist = async () => {
+        if (!isLoggedIn) {
+            navigation.navigate("SignIn")
+        }
+        if (!data) return;
+        await removeFromWatchlist(data?.id)
+    }
     const { data: credits } = useMovieCredits(id);
     const actors = credits?.cast.filter((c: any) => c.known_for_department.toLowerCase() === "acting").slice(0, 2).map((a: any) => a.name)?.join(", ")
     const director = credits?.crew.find((c: any) => c.department === "Directing");
     const { data: imagesData, isLoading: isImagesLoading } = useMovieImages(id);
     const images = imagesData?.backdrops.map((image: any) => ({ path: image.file_path, id: image.file_path, movieId: id }));
     const theme = useTheme();
+
     return (
         <ScrollView style={[{ flex: 1 }, theme.colors]}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.blur} translucent={true} />
@@ -74,10 +96,19 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
                 <View style={[styles.flex_row, styles.navigation_button_container]}>
                     <NavigationButton title="Rating" handlePress={gotoRatings} />
                     <NavigationButton title="Cast" handlePress={gotoCast} />
-                    <NavigationButton title="Videos" handlePress={gotoAwards} />
+                    <NavigationButton title="Videos" handlePress={gotoVideos} />
                 </View>
-                <Text style={[styles.heading, styles.text, theme.colors]}>Release date</Text>
-                <Text style={[styles.text]}>{release_date}</Text>
+                <View style={[styles.flex_row, { justifyContent: 'space-between' }]}>
+                    <View>
+                        <Text style={[styles.heading, styles.text, theme.colors]}>Release date</Text>
+                        <Text style={[styles.text]}>{release_date}</Text>
+                    </View>
+                    {
+                        inWatchlist
+                            ? <MaterialIcon name="playlist-add-check" color={Colors.primary} size={40} onPress={removeFromWishlist} />
+                            : <MaterialIcon name="playlist-add" color={theme.colors.color} size={40} onPress={addToWishlist} />
+                    }
+                </View>
                 <Text style={[styles.heading, styles.text, theme.colors]}>Director:</Text>
                 <Text style={[styles.text]}>{director?.name}</Text>
                 <View style={[styles.flex_row, styles.flex_center]}>
@@ -90,8 +121,6 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
             </View>
             <ListHeader title="Photos" onSeeMore={gotoImageCarousel} />
             <HorizontalList data={images} CardComponent={ImageCard} isLoading={isImagesLoading} />
-
-
         </ScrollView>
     )
 }

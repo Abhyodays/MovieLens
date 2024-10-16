@@ -11,6 +11,8 @@ import CarousalScreen from "../screens/CarousalScreen/CarousalScreen"
 import Search from "../screens/Search/Search"
 import SignUp from "../screens/SignUp/SignUp"
 import Login from "../screens/Login/Login"
+import Videos from "../screens/Videos/Videos"
+import Colors from "../constants/Colors"
 
 export type MainStackParamList = {
     HomeTabs: undefined,
@@ -22,7 +24,8 @@ export type MainStackParamList = {
     CarousalScreen: { title?: string, id: string, movieId: string }
     Search: undefined,
     SignIn: undefined,
-    SignUp: undefined
+    SignUp: undefined,
+    Videos: { moviedId: string }
 }
 const MainStack = () => {
     const Stack = createStackNavigator<MainStackParamList>();
@@ -39,6 +42,7 @@ const MainStack = () => {
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false, animationEnabled: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ title: "Sign Up" }} />
             <Stack.Screen name="SignIn" component={Login} options={{ title: "Login" }} />
+            <Stack.Screen name="Videos" component={Videos} />
         </Stack.Navigator>
     )
 }

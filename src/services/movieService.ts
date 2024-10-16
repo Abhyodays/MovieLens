@@ -3,6 +3,8 @@ import { Show } from "../types/Show";
 import { client } from "../axios/axiosClient";
 import { ApiResponse, RatingResponse } from "../types/Response";
 import { Genre } from "../types/Genre";
+import { Video } from "../types/Video";
+import { ShowDetail } from "../types/ShowDetail";
 
 type Genres = {
     genres:Genre[]
@@ -47,7 +49,7 @@ export const movieService = {
             throw err;
         }
     },
-    getMovieDetails:async(id:string)=>{
+    getMovieDetails:async(id:string):Promise<ShowDetail>=>{
         try{
             const response =  await client.get(`/movie/${id}?language=en-US`);
             return response.data;
@@ -109,6 +111,15 @@ export const movieService = {
         }
         catch(error){
             console.log("Error in getting movie genres:", error);
+            throw error;
+        }
+    },
+    getAllVideos:async(id:string): Promise<Video[]>=>{
+        try{
+            const res = await client.get(`/movie/${id}/videos?language=en-US`)
+            return res.data.results;
+        }catch(error){
+            console.log("Error in getting movie videos:", error);
             throw error;
         }
     }

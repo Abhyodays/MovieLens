@@ -24,9 +24,9 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
 
     const { data, loadMore, isFetching } = useMovies(route.params.query || "");
 
-    const results = data?.pages.flatMap(page => page.results.map(r => ({ ...r, id: `${r.id}_${page.page}` }))) || [];
+    const results = data?.pages.flatMap(page => page.results.map(r => ({ ...r, unique_id: `${r.id}_${page.page}` }))) || [];
     const page = data?.pages[0].page || 0
-    console.log(isFetching)
+
 
     useEffect(() => {
         navigation.setOptions({ title: route.params.title })
@@ -41,7 +41,7 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
                 columnWrapperStyle={styles.row}
                 onEndReached={loadMore}
                 onEndReachedThreshold={0.8}
-                keyExtractor={(item) => item.id.toString() + (route.params.query || "popular")}
+                keyExtractor={(item) => item.unique_id + (route.params.query || "popular")}
                 ListFooterComponent={() => {
                     if (isFetching) {
                         return (

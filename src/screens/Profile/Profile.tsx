@@ -36,6 +36,10 @@ const Profile = () => {
             })
             .catch(_ => { })
     }
+
+    const goToWishlist = () => {
+        navigation.navigate("Watchlist")
+    }
     useEffect(() => {
         firebase.getUser()
             .then(response => {
@@ -54,9 +58,16 @@ const Profile = () => {
         <View style={[Styles.container, colors]}>
             {
                 user ?
-                    <View style={styles.card}>
-                        <Text style={[{ color: colors.color }, styles.card_text]}>{user.name}</Text>
-                    </View>
+                    <Fragment>
+                        <View style={styles.card}>
+                            <Text style={[{ color: colors.color }, styles.card_text]}>{user.name}</Text>
+                        </View>
+                        <TouchableOpacity onPress={goToWishlist}>
+                            <View style={styles.card}>
+                                <Text style={[{ color: colors.color }, styles.card_text]}>Wishlist</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </Fragment>
                     :
                     <TouchableOpacity onPress={handleLogin}>
                         <View style={styles.card}>

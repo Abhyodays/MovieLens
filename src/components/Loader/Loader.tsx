@@ -43,4 +43,20 @@ Loader.Carousel = ({ height }: { height?: number }) => {
         </MotiView>
     )
 }
+
+Loader.Image = ({ height, width }: { height: number, width: number }) => {
+    const theme = useTheme();
+    const colorMode = theme.theme
+    return (
+        <MotiView
+            transition={{
+                type: 'timing'
+            }}
+            style={{ height, width }}
+            animate={{ backgroundColor: theme.colors.backgroundColor }}
+        >
+            <Skeleton colorMode={colorMode} radius="square" height={"100%"} width={"100%"} />
+        </MotiView>
+    )
+}
 export default Loader;

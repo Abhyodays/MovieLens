@@ -35,16 +35,17 @@ const Home = () => {
 
     const { data: popularMoviesData,
         loadMore: loadMorePopularMovies,
-        isLoading: isPopularMoviesLoading
+        isLoading: isPopularMoviesLoading,
+        isFetchingNextPage: isFetchingPopularMovies
     } = useMovies(POPULAR_MOVIES)
-    const popularMovies = popularMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, id: `${tr.id}_${page.page}` }))) || [];
+    const popularMovies = popularMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, unique_id: `${tr.id}_${page.page}` }))) || [];
     const {
         data: upcomingMoviesData,
         loadMore: loadMoreUpcomingMovies,
         isLoading: isUpcomingMoviesLoading
     } = useMovies(UPCOMING_MOVIES);
 
-    const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results.map(uc => ({ ...uc, id: `${uc.id}_${page.page}` }))) || [];
+    const upcomingMovies = upcomingMoviesData?.pages.flatMap(page => page.results.map(uc => ({ ...uc, unique_id: `${uc.id}_${page.page}` }))) || [];
     const theme = useTheme();
 
     const {
@@ -54,7 +55,7 @@ const Home = () => {
         isSuccess,
         error
     } = useMovies(TOP_RATED);
-    const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, id: `${tr.id}_${page.page}` }))) || [];
+    const topRatedMovies = topRatedMoviesData?.pages.flatMap(page => page.results.map(tr => ({ ...tr, unique_id: `${tr.id}_${page.page}` }))) || [];
 
 
     return (
@@ -63,7 +64,7 @@ const Home = () => {
                 ? <Loader.Carousel />
                 : <Carousel data={trendingShows ? trendingShows.results : []} CardComponent={Slide} />}
             <ListHeader title="Popular Movies" onSeeMore={gotoPopularMovies} />
-            <HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} CardComponent={ShowCard} isLoading={isPopularMoviesLoading} />
+            <HorizontalList data={popularMovies} onEnd={loadMorePopularMovies} CardComponent={ShowCard} isLoading={isPopularMoviesLoading} isFetching={isFetchingPopularMovies} />
             <ListHeader title="Upcoming Movies" onSeeMore={gotoUpcomingMovies} />
             <HorizontalList data={upcomingMovies} onEnd={loadMoreUpcomingMovies} CardComponent={ShowCard} isLoading={isUpcomingMoviesLoading} />
             <ListHeader title="Top Rated Movies" onSeeMore={gotoTopRatedMovies} />

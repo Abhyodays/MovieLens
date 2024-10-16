@@ -1,4 +1,4 @@
-export type Show = {
+export type ShowDetail = {
     id:string,
     title?:string,
     name?:string,
@@ -7,5 +7,8 @@ export type Show = {
     genre_ids:number[],
     adult:boolean,
     media_type: string,
+    release_date:string,
+    runtime:number,
+    vote_average:number,
     unique_id?:string
 }

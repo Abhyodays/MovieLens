@@ -1,9 +1,12 @@
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
-import { memo } from "react"
-import { StyleSheet, Image, StyleProp, ViewStyle, View, Touchable, TouchableOpacity } from "react-native"
+import { memo, useState } from "react"
+import { StyleSheet, Image, StyleProp, ViewStyle, View, Touchable, TouchableOpacity, ActivityIndicator } from "react-native"
 import { SnackbarProps } from "react-native-paper"
 import { MainStackParamList } from "../../navigators/MainStack"
+import Colors from "../../constants/Colors"
+import Loader from "../Loader/Loader"
+import { useTheme } from "../../contexts/ThemeContext"
 export type ImageCardPropType = {
     data: {
         path: string,
@@ -12,14 +15,22 @@ export type ImageCardPropType = {
 }
 const ImageCard = ({ data }: ImageCardPropType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
+    const [loading, setLoading] = useState(true);
 
     const openCarousel = (id: string) => {
         navigation.navigate("CarousalScreen", { id, title: "Images", movieId: data.movieId })
     }
+    const theme = useTheme();
     return (
         <TouchableOpacity onPress={() => openCarousel(data.path)}>
             <View style={styles.container}>
-                <Image style={styles.image} source={{ uri: `${process.env.IMAGE_URI}${data?.path}` }} resizeMode="cover" />
+                {
+                    loading &&
+                    <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+                        <ActivityIndicator size={"large"} color={theme.colors.color} />
+                    </View>
+                }
+                <Image style={styles.image} source={{ uri: `${process.env.IMAGE_URI}${data?.path}` }} resizeMode="cover" onLoad={() => setLoading(false)} />
             </View>
         </TouchableOpacity>
     )
