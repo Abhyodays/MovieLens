@@ -6,8 +6,6 @@ import { useEffect, useMemo } from "react"
 import ShowCard from "../../components/ShowCard/ShowCard"
 import { useTheme } from "../../contexts/ThemeContext"
 import { useMovies } from "../../hooks/useMovieQueries"
-import Styles from "../../Styles"
-import { ActivityIndicator } from "react-native-paper"
 import Loading from "../../components/Loading/Loading"
 
 type ShowGridRouteType = {
@@ -40,8 +38,8 @@ const ShowGrid = ({ route }: ShowGridRouteType) => {
                 contentContainerStyle={[styles.container]}
                 columnWrapperStyle={styles.row}
                 onEndReached={loadMore}
-                onEndReachedThreshold={0.8}
-                keyExtractor={(item) => item.unique_id + (route.params.query || "popular")}
+                onEndReachedThreshold={0.5}
+                keyExtractor={(item) => item.unique_id + (route.params.query)}
                 ListFooterComponent={() => {
                     if (isFetching) {
                         return (

@@ -16,7 +16,6 @@ const Search = () => {
     const inputRef = useRef<TextInput>(null);
     const [input, setInput] = useState<string>("");
     const [debouncedInput, setDebouncedInput] = useState<string>("");
-    // debounced input search
     useEffect(() => {
         const id = setTimeout(() => {
             setDebouncedInput(input);
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
     search_input: {
         fontSize: 16,
         marginLeft: 5,
-        flex: 0.8,
+        flex: 1,
         color: Colors.black
     },
     cancel_text: {

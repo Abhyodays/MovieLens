@@ -31,7 +31,7 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
     const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
     const release_date = new Date(data?.release_date!).toLocaleDateString('en-US', { year: "numeric", month: "long", day: "numeric" })
     const { addToWatchlist, watchlist, removeFromWatchlist } = useWatchlist();
-    const { isLoggedIn } = useFirebaseContext();
+    const { isLoggedIn, firebase } = useFirebaseContext();
     const inWatchlist = watchlist.findIndex(m => m.id === id) !== -1;
 
     const gotoVideos = () => {
@@ -47,14 +47,14 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
         navigation.navigate("CarousalScreen", { movieId: id, title: 'Images', id })
     }
     const addToWishlist = async () => {
-        if (!isLoggedIn) {
+        if (!isLoggedIn && !firebase.account.currentUser) {
             navigation.navigate("SignIn")
         }
         if (!data) return;
         addToWatchlist(data)
     }
     const removeFromWishlist = async () => {
-        if (!isLoggedIn) {
+        if (!isLoggedIn && !firebase.account.currentUser) {
             navigation.navigate("SignIn")
         }
         if (!data) return;
@@ -105,8 +105,8 @@ const ShowDetails = ({ route }: ShowDetailsPropType) => {
                     </View>
                     {
                         inWatchlist
-                            ? <MaterialIcon name="playlist-add-check" color={Colors.primary} size={40} onPress={removeFromWishlist} />
-                            : <MaterialIcon name="playlist-add" color={theme.colors.color} size={40} onPress={addToWishlist} />
+                            ? <MaterialIcon name="playlist-add-check" color={Colors.primary} size={35} onPress={removeFromWishlist} />
+                            : <MaterialIcon name="playlist-add" color={theme.colors.color} size={35} onPress={addToWishlist} />
                     }
                 </View>
                 <Text style={[styles.heading, styles.text, theme.colors]}>Director:</Text>

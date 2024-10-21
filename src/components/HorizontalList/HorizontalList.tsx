@@ -36,8 +36,7 @@ const HorizontalList = <T,>({ data, onEnd, CardComponent, isLoading, isFetching 
                 onEndReached={onEnd}
                 onEndReachedThreshold={0.5}
                 initialNumToRender={5}
-                maxToRenderPerBatch={5}
-                windowSize={11}
+                windowSize={20}
                 ListFooterComponent={() => {
                     if (isFetching) {
                         return (

@@ -24,10 +24,9 @@ const RatingCard = ({ data, expand, onPress }: RatingCardPropType) => {
     }
     useEffect(() => {
         if (isExpand) {
-            Animated.timing(heightRef, {
+            Animated.spring(heightRef, {
                 toValue: 1,
                 useNativeDriver: false,
-                duration: 1000,
             }).start()
         }
     }, [isExpand])
